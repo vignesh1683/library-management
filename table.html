@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase table</title>
+    <link 
+    rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+    crossorigin="anonymous">
+  </head>
+
+  <body>
+    <nav>
+      <div class="menu-icon"></div>
+      <div class="logo">Digital Library</div>
+    </nav>
+
+    <link rel="stylesheet" href="table.css" />
+    <div class="ViewRecordTable">
+      <h1>Available Books in library | Bookstore</h1>
+      <a href="adminManageBooks.html">
+        <img class="arrow" src="../src/images/arrow.png"/>
+      </a>
+      <a href="AddBook.html">
+        <input id="select" type="submit" name="Manage Books" value="Manage Books"/>
+      </a>
+      <div class="container mt-3" id="id01">
+        <table class="table table-dark text-white">
+          <thead>
+            <th>Sno</th>
+            <th>AuthorName</th>
+            <th>BookPrice</th>
+            <th>bookid</th>
+            <th>bookTitle</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+
+    <script id="MainScript">
+      //-----------------------------------------
+
+       var firebaseConfig = {
+        apiKey: "AIzaSyBlk8gpluigfsHonf_Dnr3kh9U7H7K6OrQ",
+        authDomain: "library-assign.firebaseapp.com",
+        databaseURL: "https://library-assign-default-rtdb.firebaseio.com",
+        projectId: "library-assign",
+        storageBucket: "library-assign.appspot.com",
+        messagingSenderId: "224629357085",
+        appId: "1:224629357085:web:853386badb85d3ad73a4f4",
+        measurementId: "G-BXB9Q9610J"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      //-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+      function SelectAllData() {
+        firebase
+          .database()
+          .ref("AddBook")
+          .once("value", function (snapshot) {
+            snapshot.forEach(function (CurrentRecord) {
+              var name = CurrentRecord.val().AuthorName;
+              var bookprice = CurrentRecord.val().BookPrice;
+              var bookid = CurrentRecord.val().bookId;
+              var booktitle = CurrentRecord.val().bookTitle;
+              AddItemsToTable(name, bookprice, bookid, booktitle);
+              console.log(bookid);
+            });
+          });
+      }
+      // var firebaseRef = firebase.database().ref('AddBook');
+
+      // firebaseRef.on("value",
+      //     function(snapshot) {
+      //         snapshot.forEach(function(element) {
+      //             console.log(element.key);
+      //         });
+      //     })
+
+      window.onload = SelectAllData();
+      // //-------------------------------------------------
+
+      var stdno = 0;
+
+      function AddItemsToTable(name, bookprice, bookid, booktitle) {
+        var tbody = document.getElementById("tbody1");
+        var trow = document.createElement("tr");
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+        var td3 = document.createElement("td");
+        var td4 = document.createElement("td");
+        var td5 = document.createElement("td");
+        td1.innerHTML = ++stdno;
+        td2.innerHTML = name;
+        td3.innerHTML = bookprice;
+        td4.innerHTML = bookid;
+        td5.innerHTML = booktitle;
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+        tbody.appendChild(trow);
+      }
+    </script>
+  </body>
+</html>
